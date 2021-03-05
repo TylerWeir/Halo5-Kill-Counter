@@ -5,8 +5,9 @@
 # By: Tyler Weir
 
 import requests
-import datetime 
-
+import iso8601
+from datetime import datetime
+from pytz import timezone
 
 class KillCounter:
     """Track the today's total Halo 5 kills."""
@@ -36,13 +37,13 @@ class KillCounter:
             player_dict = game_dict['Players']   # Access the players data
             player = player_dict[0]              # Access only the first player
 
-            date_dict = game_dict['MatchCompletedDate']
+            date_dict = game_dict['MatchCompletedDate'] # Access the game date
             game_date = date_dict['ISO8601Date']
                     
-            # print(f"Date: {game_date}")
-            print(f"Date: {game_date} \tGame {i+1}: \tKills: {player['TotalKills']} \tDeaths: {player['TotalDeaths']} \tKD: {player['TotalKills']/player['TotalDeaths']}")          
-                                 
-                                                   
+            game_date_UTC = iso8601.parse_date(game_date)   # Parse the iso date
+            game_date_PAC = game_date_UTC.astimezone(timezone('US/Pacific')) # Change to pacific time 
+
+            print(f"Date: {game_date_PAC} \tGame {i+1}: \tKills: {player['TotalKills']} \tDeaths: {player['TotalDeaths']} \tKD: {player['TotalKills']/player['TotalDeaths']}")          
 
 
 if __name__ == '__main__':
