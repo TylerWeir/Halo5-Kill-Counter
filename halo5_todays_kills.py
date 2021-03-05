@@ -6,7 +6,7 @@
 
 import requests
 import iso8601
-from datetime import datetime
+import datetime
 from pytz import timezone
 
 class KillCounter:
@@ -28,7 +28,7 @@ class KillCounter:
     def toKillDateList(self, API_data):
         """Takes API data and returns a list of (kills, date) pairs for easy 
            storage."""
-        kills = [] 
+        stats = [] 
          
         game_dicts = API_data['Results']         # Access the results key
         for i in range(len(game_dicts)):
@@ -36,18 +36,23 @@ class KillCounter:
             
             player_dict = game_dict['Players']   # Access the players data
             player = player_dict[0]              # Access only the first player
+            num_kills = player['TotalKills']     # Record the player's kills
 
             date_dict = game_dict['MatchCompletedDate'] # Access the game date
             game_date = date_dict['ISO8601Date']
-                    
             game_date_UTC = iso8601.parse_date(game_date)   # Parse the iso date
             game_date_PAC = game_date_UTC.astimezone(timezone('US/Pacific')) # Change to pacific time 
 
-            print(f"Date: {game_date_PAC} \tGame {i+1}: \tKills: {player['TotalKills']} \tDeaths: {player['TotalDeaths']} \tKD: {player['TotalKills']/player['TotalDeaths']}")          
+            # Now get the game id number
 
+            print(f"Date: {game_date_PAC.strftime('%m-%d %H:%M')} \tGame {i+1}: \tKills: {player['TotalKills']} \tDeaths: {player['TotalDeaths']} \tKD: {player['TotalKills']/player['TotalDeaths']}")          
+            stats.append((num_kills, game_date_PAC))
 
+        #print(stats)
+                
+            
 if __name__ == '__main__':
-    kill_counter = KillCounter("MrFlyhigh")
+    kill_counter = KillCounter("EnduroCat14")
 
     api_data = kill_counter.callAPI()
     kill_counter.toKillDateList(api_data)
