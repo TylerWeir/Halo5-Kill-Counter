@@ -9,23 +9,13 @@ print(f"Status code: {r.status_code}")
 
 # Store API response in a variable.
 response_dict = r.json()
-print(f"keys: {response_dict.keys()}")
 
 # Explore information about the games
 game_dicts = response_dict['Results']
-print(f"Games returned: {len(game_dicts)}")
 
-# Examine the first game
-game_dict = game_dicts[0]
-print(f"\nKeys:{len(game_dict)}")
-for key in sorted(game_dict.keys()):
-    print(key)
+for i in range(len(game_dicts)):
+    game_dict = game_dicts[i]   # Examine the ith game
+    player_dict = game_dict['Players']
+    endurocat = player_dict[0]
+    print(f"Game {i+1}: \t{endurocat['TotalKills']}")        
 
-
-player_dict = game_dict['Players']
-endurocat = player_dict[0]
-for key in sorted(endurocat.keys()):
-    print(key)
-    
-
-print(f"I GOT {endurocat['TotalKills']} KILLS!")
