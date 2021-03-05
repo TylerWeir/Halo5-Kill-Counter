@@ -8,15 +8,15 @@ headers = {
 
 params = urllib.parse.urlencode({
     # Request parameters
-    'modes': '',
-    'start': '',
-    'count': '10',
-    'include-times': 'False',
+    #'modes': '',
+    #'start': '',
+    #'count': '10',
+    #'include-times': 'False',
 })
 
 try:
     conn = http.client.HTTPSConnection('www.haloapi.com')
-    conn.request("GET", "/stats/h5/players/Endurcat14/matches?%s" % params, "Players", headers)
+    conn.request("GET", "/stats/h5/players/EnduroCat14/matches?%s" % params, "Players", headers)
     response = conn.getresponse()
     data = response.read()
 
