@@ -33,10 +33,13 @@ class KillCounter:
         game_dicts = API_data['Results']         # Access the results key
         for i in range(len(game_dicts)):
             game_dict = game_dicts[i]            # Access the ith game
-            
+           
             player_dict = game_dict['Players']   # Access the players data
             player = player_dict[0]              # Access only the first player
             num_kills = player['TotalKills']     # Record the player's kills
+           
+            id_dict = game_dict['Id']
+            game_id = id_dict['MatchId']
 
             date_dict = game_dict['MatchCompletedDate'] # Access the game date
             game_date = date_dict['ISO8601Date']
@@ -44,15 +47,15 @@ class KillCounter:
             game_date_PAC = game_date_UTC.astimezone(timezone('US/Pacific')) # Change to pacific time 
 
             # Now get the game id number
+            # print(f"MatchId: {game_id} \tDate: {game_date_PAC.strftime('%m-%d %H:%M')} \tGame {i+1}: \tKills: {player['TotalKills']} \tDeaths: {player['TotalDeaths']} \tKD: {player['TotalKills']/player['TotalDeaths']}")          
+            stats.append((num_kills, game_id, game_date_PAC.strftime('%m-%d')))
 
-            print(f"Date: {game_date_PAC.strftime('%m-%d %H:%M')} \tGame {i+1}: \tKills: {player['TotalKills']} \tDeaths: {player['TotalDeaths']} \tKD: {player['TotalKills']/player['TotalDeaths']}")          
-            stats.append((num_kills, game_date_PAC))
-
-        #print(stats)
                 
+        for game in stats:
+            print(game)
             
 if __name__ == '__main__':
-    kill_counter = KillCounter("EnduroCat14")
+    kill_counter = KillCounter("MrFlyhigh")
 
     api_data = kill_counter.callAPI()
     kill_counter.toKillDateList(api_data)

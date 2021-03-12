@@ -1,0 +1,15 @@
+""" 
+Program: main.py
+Description: This micropython program is designed to be run on an
+ESP8266 board.  It accesses the Halo5 Public API to download and record a 
+player's total kills in a day. The number of kills will then be displayed via
+a three digit seven segment display.
+
+Last Edit: March 11, 2021
+
+By: Tyler Weir
+"""
+
+import urequests
+
+urequest.get(url, **kw)
