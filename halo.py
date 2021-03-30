@@ -118,5 +118,5 @@ if __name__ == '__main__':
             count = 0
             todaysDate = currentDate
         
-        # Wait 10 seconds before next API call
-        time.sleep(10)
+        # Wait 60 seconds before next API call
+        time.sleep(60)
