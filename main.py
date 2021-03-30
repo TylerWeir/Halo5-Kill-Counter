@@ -1,2 +1,0 @@
-import blink 
-blink.run()
