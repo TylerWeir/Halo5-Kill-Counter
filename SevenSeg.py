@@ -51,7 +51,7 @@ class SevenSeg:
         self.d3.off()
     
     def displayValue(self):
-        while True:
+        while 1:
             self.d1.on()
             segs = self.font[self.value1]
             for s in segs:
@@ -92,16 +92,8 @@ class SevenSeg:
             self.value2 = -1
 
     def start(self):
-        displayThread = self.thread(self.displayValue)
+        displayThread = threading.Thread(target=self.displayValue, args=())
         displayThread.start()
-
-    class thread (threading.Thread):
-        def __init__(self, func):
-            threading.Thread.__init__(self)
-            self.func = func 
-
-        def run(self):
-           self.func()
 
     def displayLoading(self):
         path = [(self.d1, self.a), (self.d2, self.a), (self.d3, self.a),
@@ -112,7 +104,7 @@ class SevenSeg:
                 (self.d1, self.f)]
         
         index = 0
-        while True:
+        while 1:
             seg = path[index]
             seg1 = path[index-1]
             seg2 = path[index-2]

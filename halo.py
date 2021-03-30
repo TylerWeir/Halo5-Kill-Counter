@@ -11,14 +11,11 @@ gamertag = 'MrFlyhigh'
 url = f"https://www.haloapi.com/stats/h5/players/{gamertag}/matches?include-times=True"
 headers = {'Ocp-Apim-Subscription-Key': 'f83454ddd4fb4e4da43f9752693bf8e2'}
 
-# Global variables for threads to access
-games = []
-count = 0 
 
 def callAPI():
     """Calls the API and returns the result in json format."""
     r = requests.get(url, headers=headers)
-    print(f"API Status: {r.status_code}")
+    # print(f"API Status: {r.status_code}")
     return r.json()
 
 def toKillDateList(API_data):
@@ -75,39 +72,43 @@ def containsID(games, ID):
     return False
 
 if __name__ == '__main__':
+    # Holds the current stats
+    games = []
+    count = 0 
+
     todaysDate = datetime.date.today().strftime("%m-%d") 
-    print(f"Todays date: {todaysDate}")
+    # print(f"Todays date: {todaysDate}")
     # Reference the backup in case games were lost because of power outage
-    print("Checking backup")
+    # print("Checking backup")
     backUp = readBackup()
     for game in backUp:
         if game[2] == todaysDate:
             games.append(game)
             count+=game[0]
-            print("loading game from backup")
+            # print("loading game from backup")
     
     # Set up the display
-    print("Setting up the display")
+    # print("Setting up the display")
     display = SevenSeg([18, 23, 24, 25, 8, 7, 12], [2, 3, 4])
     display.updateValue(count)
     display.start()
     print("The display should be live")
 
     # Enter the main program loop
-    while True:
-        print("Calling the API")
+    while 1:
+        # print("Calling the API")
         todaysGames = getTodaysGames()  # Get todays games from the API
         for game in todaysGames:        # Add new games to the list
             if not containsID(games, game[1]):
-                print("Adding game to the count")
+                # print("Adding game to the count")
                 games.append(game)
                 count+=game[0]    
                 display.updateValue(count)
                 
                 if len(games) >= 25:            # Make a backup if there are more than 25 games
+                    # print("Writing backup")
                     writeBackup(games)
 
-        
                 
         # Restart counts and clear backup if it is a new day
         currentDate = datetime.date.today().strftime("%m-%d")
