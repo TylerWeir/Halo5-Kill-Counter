@@ -5,6 +5,7 @@ import iso8601
 import datetime
 import threading
 from pytz import timezone
+from SevenSeg import SevenSeg
 
 # Global API information
 gamertag = 'MrFlyhigh'    
@@ -15,20 +16,9 @@ headers = {'Ocp-Apim-Subscription-Key': 'f83454ddd4fb4e4da43f9752693bf8e2'}
 games = []
 count = 0
 
-class myThread(threading.Thread):
-    def __init__(self, threadID, name):
-        threading.Thread.__init__(self)
-        self.threadID = threadID
-        self.name = name
-    def run(self):
-        print(f"Starting {self.name}")
-        displayCount(self.name)
-
 def callAPI():
     """Calls the API and returns the result in json format."""
     r = requests.get(url, headers=headers)
-    print(f"Status code: {r.status_code}")
-
     return r.json()
 
 def toKillDateList(API_data):
@@ -84,12 +74,6 @@ def containsID(games, ID):
             return True
     return False
 
-def displayCount(threadName):
-    while True:
-        print(f"{threadName} says:")
-        print(f"Total spartans bested: {count}")
-        time.sleep(5)
-
 if __name__ == '__main__':
     todaysDate = datetime.date.today().strftime("%m-%d") 
 
@@ -97,23 +81,22 @@ if __name__ == '__main__':
     backUp = readBackup()
     for game in backUp:
         if game[2] == todaysDate:
-            print("Adding a game from backup.")
             games.append(game)
             count+=game[0]
     
-    # Spin up the display thread
-    displayThread = myThread(1, "Display Thread")
-    displayThread.start()
-
+    # Set up the display
+        display = SevenSeg([18, 23, 24, 25, 8, 7, 12], [2, 3, 4])
+        display.updateValue(count)
+        display.start()
+    
     # Enter the main program loop
     while True:
-        print("Calling API")
         todaysGames = getTodaysGames()  # Get todays games from the API
         for game in todaysGames:        # Add new games to the list
             if not containsID(games, game[1]):
-                print("Adding a game to the count.")
                 games.append(game)
                 count+=game[0]    
+                display.updateValue(count)
         
         if len(games) >= 25:            # Make a backup if there are more than 25 games
             writeBackup(games)
