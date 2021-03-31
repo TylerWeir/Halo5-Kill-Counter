@@ -44,12 +44,16 @@ def toKillDateList(API_data):
 
 def getTodaysGames():
     """Gets todays game history from the API."""
-    api_data = callAPI()
-    gameHistory = toKillDateList(api_data) 
-    todaysDate = datetime.date.today().strftime("%m-%d") 
-    todaysGames = [(k, i, d) for (k, i, d) in gameHistory if d == todaysDate]
+    try:
+        api_data = callAPI()
+        gameHistory = toKillDateList(api_data) 
+        todaysDate = datetime.date.today().strftime("%m-%d") 
+        todaysGames = [(k, i, d) for (k, i, d) in gameHistory if d == todaysDate]
 
-    return todaysGames
+        return todaysGames
+    except:
+        print("Error getting/processing API data")
+        return []
 
 def writeBackup(games):
     filename = 'games.json'
@@ -92,7 +96,6 @@ if __name__ == '__main__':
     display = SevenSeg([18, 23, 24, 25, 8, 7, 12], [2, 3, 4])
     display.updateValue(count)
     display.start()
-    print("The display should be live")
 
     # Enter the main program loop
     while 1:

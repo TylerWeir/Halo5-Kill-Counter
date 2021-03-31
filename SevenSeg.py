@@ -56,21 +56,21 @@ class SevenSeg:
             segs = self.font[self.value1]
             for s in segs:
                 s.on()
-            time.sleep(0.005)
+            time.sleep(0.003)
             self.clear()
             
             self.d2.on()
             segs = self.font[self.value2]
             for s in segs:
                 s.on()
-            time.sleep(0.005)
+            time.sleep(0.003)
             self.clear()
 
             self.d3.on()
             segs = self.font[self.value3]
             for s in segs:
                 s.on()
-            time.sleep(0.005)
+            time.sleep(0.003)
             self.clear()
 
     def updateValue(self, value):
