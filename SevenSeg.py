@@ -1,6 +1,9 @@
 from gpiozero import LED
+from threading import Thread, Lock
 import time
-import threading 
+
+# Mutex to be used around the digit values
+mutex = Lock()
 
 class SevenSeg:
     def __init__(self, segs=[-1,-1,-1,-1,-1,-1,-1], digits=[-1,-1,-1]):
@@ -52,6 +55,8 @@ class SevenSeg:
     
     def displayValue(self):
         while 1:
+            mutex.acquire()     # Acquire the digits to read and display
+
             self.d1.on()
             segs = self.font[self.value1]
             for s in segs:
@@ -71,18 +76,22 @@ class SevenSeg:
             for s in segs:
                 s.on()
             time.sleep(0.003)
+
+            mutex.release()     # Release the digits incase write is needed
             self.clear()
 
     def updateValue(self, value):
         # Limit to three digits
-
+        
         if value>999:
             value = 999
-        
+
+        mutex.acquire()     # Acquire the digits to write to them
+
         self.value1 = (value - value%100)//100
         self.value2 = ((value-self.value1*100) - value%10)//10
         self.value3 = value%10
-
+        
         # Erase first digit
         if value <= 99:
             self.value1 = -1
@@ -90,9 +99,10 @@ class SevenSeg:
         # Erase second digit
         if value <= 9:
             self.value2 = -1
+        mutex.release()     # Release the digits so that they may be displayed
 
     def start(self):
-        displayThread = threading.Thread(target=self.displayValue, args=())
+        displayThread = Thread(target=self.displayValue, args=())
         displayThread.start()
 
     def displayLoading(self):

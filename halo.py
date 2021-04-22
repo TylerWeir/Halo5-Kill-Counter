@@ -47,7 +47,7 @@ def getTodaysGames():
     try:
         api_data = callAPI()
         gameHistory = toKillDateList(api_data) 
-        todaysDate = datetime.date.today().strftime("%m-%d") 
+        todaysDate = datetime.datetime.now().strftime("%m-%d") 
         todaysGames = [(k, i, d) for (k, i, d) in gameHistory if d == todaysDate]
 
         return todaysGames
@@ -80,8 +80,8 @@ if __name__ == '__main__':
     games = []
     count = 0 
 
-    todaysDate = datetime.date.today().strftime("%m-%d") 
-    # print(f"Todays date: {todaysDate}")
+    todaysDate = datetime.datetime.today().strftime("%m-%d") 
+    print(f"Todays date: {todaysDate}")
     # Reference the backup in case games were lost because of power outage
     # print("Checking backup")
     backUp = readBackup()
@@ -114,12 +114,19 @@ if __name__ == '__main__':
 
                 
         # Restart counts and clear backup if it is a new day
-        currentDate = datetime.date.today().strftime("%m-%d")
+        currentDate = datetime.datetime.now().strftime("%m-%d")
+        print("")
+        print(f"TIME: {datetime.datetime.now().strftime('%H:%M')}")
+        print(f"Comparing {todaysDate} to {currentDate}")
         if currentDate != todaysDate:
+            print("Switching dates")
             writeBackup([])
             games = []
             count = 0
+            display.updateValue(count)
             todaysDate = currentDate
-        
+         
         # Wait 60 seconds before next API call
+        print(f"Count: {count}")
+        print(f"Games Played: {len(games)}")
         time.sleep(60)
